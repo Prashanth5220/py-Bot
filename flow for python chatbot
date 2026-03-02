@@ -1,0 +1,68 @@
+# Healix Architecture & Message Flow Guide
+
+This document explains the step-by-step journey of a single user message. It breaks down what happens under the hood from the moment a user types "hello" on Telegram until they receive a reply.
+
+---
+
+## The High-Level Flow (A Quick Glance)
+1. **Telegram User** ➡️ *sends message*
+2. **Ngrok Tunnel** ➡️ *forwards internet traffic to Localhost*
+3. **FastAPI ([webhook.py](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/src/routes/webhook.py))** ➡️ *receives message, verifies security*
+4. **Main Brain ([user_handler.py](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/src/handlers/user_handler.py))** ➡️ *checks database, manages conversation state*
+5. **Rasa NLU ([rasa_service.py](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/src/services/rasa_service.py))** ➡️ *analyzes human language (if needed)*
+6. **DynamoDB ([dynamodb.py](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/src/services/dynamodb.py))** ➡️ *saves progress*
+7. **Telegram API** ➡️ *delivers the final reply to the user*
+
+---
+
+## Detailed Step-by-Step Breakdown
+
+Let's trace the journey of a patient booking an appointment.
+
+### Step 1: The Trigger (User -> Telegram -> Ngrok)
+A user opens the Healix Telegram bot and types: *"I need to see a cardiologist tomorrow."* 
+Telegram takes this text and sends it as a massive JSON payload (called an "Update") to the secure Webhook URL you registered.
+Because of the `Ngrok` tunnel running in your terminal, the payload travels safely from Telegram's servers directly to your laptop's `port 8000`.
+
+### Step 2: The Receptionist (FastAPI + [webhook.py](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/src/routes/webhook.py))
+Your FastAPI server is constantly listening on port 8000. It receives the Telegram payload at the `/webhook` Endpoint defined in [src/routes/webhook.py](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/src/routes/webhook.py).
+*   **Action:** It immediately rips open the JSON, extracts the user's `chat_id` (so it knows who to reply to) and the raw text message.
+*   **Security Check:** It checks if this is an Admin or a normal Patient. If normal, it hands the message off to the [user_handler.py](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/src/handlers/user_handler.py).
+
+### Step 3: The State Manager ([user_handler.py](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/src/handlers/user_handler.py) & DynamoDB)
+This is the core nervous system of the bot. The [handle_user_message()](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/src/handlers/user_handler.py#40-874) function wakes up.
+
+1.  **Session Lookup:** First, it asks DynamoDB, *"Do I know this chat ID?"*
+    *   If **No**: It creates a fresh session and sets their `currentStep` to `START`.
+    *   If **Yes**: It retrieves their `currentStep`. Let's say the user was sitting at the `USER_MENU`.
+2.  **Intent Pre-Processing:** It normalizes the user text (makes it lowercase, removes emojis). 
+
+### Step 4: The Brain Consult (Rasa NLU)
+The user typed *"I need to see a cardiologist tomorrow"*. [user_handler.py](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/src/handlers/user_handler.py) doesn't see a "1" or a "2", so it realizes it needs help understanding the natural language.
+*   It sends the text string to [rasa_service.py](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/src/services/rasa_service.py), which is talking to your Rasa server running on `port 5055`.
+*   Rasa analyzes the text and replies with structured data:
+    *   `Intent:` `book_appointment`
+    *   `Entities:` `{"department": "Cardiology", "date": "tomorrow"}`
+
+### Step 5: Executing Business Logic ([user_handler.py](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/src/handlers/user_handler.py))
+Armed with Rasa's translation, the [user_handler.py](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/src/handlers/user_handler.py) springs into action:
+1. It sees the `book_appointment` intent.
+2. It looks at the entities. Because Rasa already supplied the "Cardiology" department, the code runs a "Smart Shortcut." 
+3. Instead of asking "Please select a department," it skips that step entirely. It queries the DynamoDB table for doctors under Cardiology.
+4. It sets the user's *new* database `currentStep` to `DOCTOR` and builds a visual menu containing the list of cardiologists.
+
+### Step 6: Saving State ([dynamodb.py](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/src/services/dynamodb.py))
+Before replying, the backend must save its memory. It tells [dynamodb.py](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/src/services/dynamodb.py) to update the user's session record in AWS, saving their new `currentStep` and the fact that they picked Cardiology in the `tempData` (the bot's short-term memory).
+
+### Step 7: The Final Delivery (Telegram API)
+The user handler finishes its calculations and outputs a nicely formatted text string (the menu of doctors).
+The backend takes this string, packages it into a new JSON payload, and fires it back across the internet to Telegram's `sendMessage` API. 
+
+The API delivers the message, your phone buzzes, and you see the doctors list pop up!
+
+---
+
+## 💡 The "Action Server" Flow (Edge Case)
+Sometimes, Rasa needs to talk *back* to your databases. 
+If during a conversation, Rasa determines it needs to validate a phone number or check real-time availability using a custom python script, it triggers an action in `hospital_nlu.actions.actions`. 
+This action server executes standard Python, talks directly to DynamoDB (bypassing FastAPI), updates the slots in Rasa's memory, and then finishes its thought.

@@ -1,0 +1,19 @@
+version: "3.1"
+
+stories:
+
+- story: greet and book
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: book_appointment
+  - action: action_book_appointment
+  - intent: select_time
+  - action: action_confirm_slot
+
+- story: direct book
+  steps:
+  - intent: book_appointment
+  - action: action_book_appointment
+  - intent: select_time
+  - action: action_confirm_slot

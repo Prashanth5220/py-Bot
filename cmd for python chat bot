@@ -1,0 +1,127 @@
+# Healix Hospital Chatbot Setup Guide
+
+This guide details exactly how this project was built from scratch, the tools used, the dependencies required, and the commands to run the entire backend + NLU stack on a Windows machine.
+
+---
+
+## 1. Prerequisites (What you need installed)
+*   **Python:** Version `3.10.x` (Tested on 3.10.11)
+*   **AWS CLI:** Configured with valid credentials (for DynamoDB access).
+*   **Ngrok:** For exposing localhost to the Telegram Webhook during development.
+
+---
+
+## 2. Project Initialization & Virtual Environment
+The very first step was creating an isolated environment to hold all the messy dependencies, specifically because Rasa requires older versions of certain packages (like SQLAlchemy < 2.0) that can break modern global python environments.
+
+```powershell
+# 1. Create the project folder
+mkdir hospital-chatbot-python
+cd hospital-chatbot-python
+
+# 2. Create a virtual environment named "rasa_env"
+python -m venv rasa_env
+
+# 3. Activate the environment (Windows)
+rasa_env\Scripts\activate.bat
+```
+
+---
+
+## 3. Installing Dependencies
+With the virtual environment active ([(rasa_env)](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/hospital_nlu/actions/actions.py#160-238) showing in the terminal), we installed the required packages in two phases.
+
+### Phase 1: The FastAPI Backend
+These packages handle the web server, database connection, and Telegram routing. We saved these to a [requirements.txt](file:///c:/Users/prash/.gemini/antigravity/scratch/hospital-chatbot-python/requirements.txt) file:
+
+```text
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+pydantic>=2.8.0
+pydantic-settings>=2.4.0
+boto3>=1.35.0
+httpx>=0.27.0
+python-dotenv>=1.0.0
+```
+**Command to install:**
+```powershell
+pip install -r requirements.txt
+```
+
+### Phase 2: Rasa (The AI Engine)
+Rasa is a massive framework, so it was installed separately to ensure all of its strict dependencies mapped correctly within the `rasa_env`.
+
+**Command to install:**
+```powershell
+pip install rasa==3.6.20
+```
+
+---
+
+## 4. Initializing the Rasa Project
+Inside the main project folder, we created a sub-directory specifically for the NLU models and training data using the Rasa CLI.
+
+```powershell
+# Initialize empty rasa project inside hospital_nlu folder
+rasa init --no-prompt --init-dir hospital_nlu
+```
+*(We then heavily modified the `nlu.yml`, `domain.yml`, and `rules.yml` files inside that folder to train it on hospital terminology).*
+
+---
+
+## 5. Training the AI
+Whenever the `nlu.yml` (how users talk) or `domain.yml` (what the bot knows) files are updated, the model must be re-compiled.
+
+**Command to Train:**
+```powershell
+cd hospital_nlu
+rasa train
+cd ..
+```
+*This generates a `.tar.gz` model file in the `hospital_nlu/models/` directory.*
+
+---
+
+## 6. How to Run the Application (Daily Usage)
+To actually run this chatbot, you need **three separate terminal windows**.
+
+⚠️ **Crucial Rule:** You must activate the virtual environment in *every* terminal window before running these commands.
+
+```powershell
+rasa_env\Scripts\activate.bat
+```
+
+### Terminal 1: The Rasa Action Server
+This server handles custom python code executed by Rasa (like dynamically slotting phone numbers or performing API calls during an AI conversation).
+
+```powershell
+# From the root "hospital-chatbot-python" folder
+rasa run actions -p 5055 --actions hospital_nlu.actions.actions
+```
+
+### Terminal 2: The Main FastAPI Application
+This is the core Python application. It receives the Webhook from Telegram, talks to DynamoDB, handles menu navigation, and communicates with the AI agent.
+
+```powershell
+# Run using Uvicorn on port 8000
+python -m uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### Terminal 3: Ngrok (The Tunnel)
+Telegram requires a public `https://` URL to send messages to. Ngrok creates a secure tunnel from the public internet directly to your local FastAPI server running on port 8000.
+
+```powershell
+# Expose port 8000
+ngrok http 8000
+```
+
+---
+
+## 7. Connecting to Telegram
+Once Ngrok is running, it will give you a public URL (e.g., `https://1234-abcd.ngrok-free.app`). 
+
+Because of the `/setup` endpoint we built in FastAPI, linking the bot is as simple as taking that Ngrok URL and hitting it in your web browser:
+
+`http://localhost:8000/setup?url=https://1234-abcd.ngrok-free.app`
+
+This tells the Python script to ping the Telegram API and register your Ngrok tunnel as the official webhook receiver for your bot token!

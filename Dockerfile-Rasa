@@ -1,0 +1,2 @@
+FROM rasa/rasa:3.6.20-full
+COPY ./hospital_nlu /app

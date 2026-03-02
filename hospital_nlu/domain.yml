@@ -1,0 +1,52 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - book_appointment
+  - select_time
+
+actions:
+  - action_book_appointment
+  - action_confirm_slot
+
+entities:
+  - doctor
+  - department
+  - timeslot
+
+slots:
+  doctor:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: doctor
+  department:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: department
+  timeslot:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: timeslot
+
+responses:
+  utter_greet:
+    - text: "Hello! Welcome to the Hospital Assistant. How can I help you today?"
+  utter_goodbye:
+    - text: "Goodbye! Take care."
+  utter_ask_doctor:
+    - text: "Which doctor would you like to see?"
+  utter_ask_department:
+    - text: "Which department are you looking for?"
+  utter_confirm_booking:
+    - text: "I've noted that you want to book an appointment with {doctor} in the {department} department. Let me check the schedule for you."
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

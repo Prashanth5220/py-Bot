@@ -1,0 +1,56 @@
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - hello there
+    - good morning
+    - good evening
+    - moin
+    - hey there
+    - let's go
+    - hey dude
+    - goodmorning
+    - goodevening
+    - good afternoon
+
+- intent: goodbye
+  examples: |
+    - cu
+    - good by
+    - cee you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - bye bye
+    - see you later
+
+- intent: book_appointment
+  examples: |
+    - book an appointment for [cardiology](department) [ex.dr.prshanth](doctor)
+    - book an appointment for [cardiology](department) [dr.prshanth](doctor)
+    - I want to book an appointment with [Dr. Prashanth](doctor) in [cardiology](department)
+    - Schedule a visit for [pediatrics](department) with [Dr. Smith](doctor)
+    - I need an appointment for [ENT](department)
+    - book with [Dr. Raj](doctor)
+    - can I see [Dr. Kumar](doctor) in [Neurology](department)?
+    - book an appointment for [orthopedics](department) with [Dr. Sharma](doctor)
+    - appointment for [General Medicine](department) [Dr. Ali](doctor)
+    - book an appointment
+    - I want to see a doctor
+
+- intent: select_time
+  examples: |
+    - [09:00 to 09:30](timeslot)
+    - [10:00 to 10:30](timeslot)
+    - [09:30 to 10:00](timeslot)
+    - I'll take the [9:00](timeslot) slot
+    - [11:00 am](timeslot)
+    - can I have [12:00](timeslot)?
+    - book for [2:00 pm](timeslot)
+    - [9:00 - 9:30](timeslot)

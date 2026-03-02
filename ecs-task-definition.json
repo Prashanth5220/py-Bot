@@ -1,0 +1,91 @@
+{
+  "family": "hospital-chatbot-task",
+  "requiresCompatibilities": [
+      "FARGATE"
+  ],
+  "networkMode": "awsvpc",
+  "cpu": "1024",
+  "memory": "2048",
+  "executionRoleArn": "arn:aws:iam::<AWS_ACCOUNT_ID>:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+      {
+          "name": "app",
+          "image": "<AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/hospital-chatbot-app:latest",
+          "cpu": 256,
+          "memory": 512,
+          "portMappings": [
+              {
+                  "containerPort": 3000,
+                  "protocol": "tcp"
+              }
+          ],
+          "essential": true,
+          "environment": [
+              {"name": "AWS_REGION", "value": "<AWS_REGION>"},
+              {"name": "SESSION_TABLE", "value": "ChatbotSessions"},
+              {"name": "USER_TABLE", "value": "ChatbotUsers"},
+              {"name": "DEPARTMENT_TABLE", "value": "ChatbotDepartments"},
+              {"name": "DOCTOR_TABLE", "value": "ChatbotDoctors"},
+              {"name": "TIMESLOT_TABLE", "value": "ChatbotTimeSlots"},
+              {"name": "APPOINTMENT_TABLE", "value": "ChatbotAppointments"},
+              {"name": "FEEDBACK_TABLE", "value": "ChatbotFeedback"},
+              {"name": "ADMINS_TABLE", "value": "ChatbotAdmins"},
+              {"name": "JWT_SECRET_KEY", "value": "super-secret-key-123"},
+              {"name": "JWT_ALGORITHM", "value": "HS256"},
+              {"name": "ACCESS_TOKEN_EXPIRE_MINUTES", "value": "60"},
+              {"name": "AWS_ACCESS_KEY_ID", "value": "YOUR_ACCESS_KEY"},
+              {"name": "AWS_SECRET_ACCESS_KEY", "value": "YOUR_SECRET_KEY"}
+          ],
+          "logConfiguration": {
+              "logDriver": "awslogs",
+              "options": {
+                  "awslogs-group": "/ecs/hospital-chatbot",
+                  "awslogs-region": "<AWS_REGION>",
+                  "awslogs-stream-prefix": "app"
+              }
+          }
+      },
+      {
+          "name": "rasa",
+          "image": "<AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/hospital-chatbot-rasa:latest",
+          "cpu": 512,
+          "memory": 1024,
+          "portMappings": [
+              {
+                  "containerPort": 5005,
+                  "protocol": "tcp"
+              }
+          ],
+          "essential": true,
+          "logConfiguration": {
+              "logDriver": "awslogs",
+              "options": {
+                  "awslogs-group": "/ecs/hospital-chatbot",
+                  "awslogs-region": "<AWS_REGION>",
+                  "awslogs-stream-prefix": "rasa"
+              }
+          }
+      },
+      {
+          "name": "action_server",
+          "image": "<AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/hospital-chatbot-actions:latest",
+          "cpu": 256,
+          "memory": 512,
+          "portMappings": [
+              {
+                  "containerPort": 5055,
+                  "protocol": "tcp"
+              }
+          ],
+          "essential": true,
+          "logConfiguration": {
+              "logDriver": "awslogs",
+              "options": {
+                  "awslogs-group": "/ecs/hospital-chatbot",
+                  "awslogs-region": "<AWS_REGION>",
+                  "awslogs-stream-prefix": "actions"
+              }
+          }
+      }
+  ]
+}
