@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      # Hot-reload in dev: mount source directly
+      - ./src:/app/src
+    command: >
+      python -m uvicorn src.main:app
+      --host 0.0.0.0 --port 3000 --reload

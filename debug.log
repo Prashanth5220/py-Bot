@@ -1,0 +1,133 @@
+
+=== ERROR ===
+Traceback (most recent call last):
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python\src\routes\webhook.py", line 90, in _process_update
+    reply = await handle_user_message(session_id, text, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python\src\handlers\user_handler.py", line 82, in handle_user_message
+    if not is_known and len(norm) > 2: # Ignore single chars or typos like "1" or "ok"
+NameError: name 'is_known' is not defined
+
+
+=== ERROR ===
+Traceback (most recent call last):
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python\src\routes\webhook.py", line 90, in _process_update
+    reply = await handle_user_message(session_id, text, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python\src\handlers\user_handler.py", line 82, in handle_user_message
+    if not is_known and len(norm) > 2: # Ignore single chars or typos like "1" or "ok"
+NameError: name 'is_known' is not defined
+
+
+=== ERROR ===
+Traceback (most recent call last):
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python\src\routes\webhook.py", line 90, in _process_update
+    reply = await handle_user_message(session_id, text, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python\src\handlers\user_handler.py", line 47, in handle_user_message
+    if not is_logged_in:
+UnboundLocalError: local variable 'is_logged_in' referenced before assignment
+
+
+=== ERROR ===
+Traceback (most recent call last):
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python\src\routes\webhook.py", line 90, in _process_update
+    reply = await handle_user_message(session_id, text, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python\src\handlers\user_handler.py", line 47, in handle_user_message
+    if not is_logged_in:
+UnboundLocalError: local variable 'is_logged_in' referenced before assignment
+
+
+=== ERROR ===
+Traceback (most recent call last):
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python\src\routes\webhook.py", line 90, in _process_update
+    reply = await handle_user_message(session_id, text, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python\src\handlers\user_handler.py", line 47, in handle_user_message
+    if not is_logged_in:
+UnboundLocalError: local variable 'is_logged_in' referenced before assignment
+
+
+=== ERROR ===
+Traceback (most recent call last):
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\routes\webhook.py", line 90, in _process_update
+    reply = await handle_user_message(session_id, text, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\handlers\user_handler.py", line 339, in handle_user_message
+    return await _handle_user_menu(session_id, norm, raw_message, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\handlers\user_handler.py", line 902, in _handle_user_menu
+    replies = await rasa_service.handle_message(raw_message, session_id)
+NameError: name 'rasa_service' is not defined
+
+
+=== ERROR ===
+Traceback (most recent call last):
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\routes\webhook.py", line 90, in _process_update
+    reply = await handle_user_message(session_id, text, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\handlers\user_handler.py", line 339, in handle_user_message
+    return await _handle_user_menu(session_id, norm, raw_message, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\handlers\user_handler.py", line 902, in _handle_user_menu
+    replies = await rasa_service.handle_message(raw_message, session_id)
+NameError: name 'rasa_service' is not defined
+
+
+=== ERROR ===
+Traceback (most recent call last):
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\routes\webhook.py", line 90, in _process_update
+    reply = await handle_user_message(session_id, text, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\handlers\user_handler.py", line 339, in handle_user_message
+    return await _handle_user_menu(session_id, norm, raw_message, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\handlers\user_handler.py", line 902, in _handle_user_menu
+    if replies: return "\n\n".join(replies)
+NameError: name 'rasa_service' is not defined
+
+
+=== ERROR ===
+Traceback (most recent call last):
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\routes\webhook.py", line 90, in _process_update
+    reply = await handle_user_message(session_id, text, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\handlers\user_handler.py", line 339, in handle_user_message
+    return await _handle_user_menu(session_id, norm, raw_message, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\handlers\user_handler.py", line 902, in _handle_user_menu
+    if replies: return "\n\n".join(replies)
+NameError: name 'rasa_service' is not defined
+
+
+=== ERROR ===
+Traceback (most recent call last):
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\routes\webhook.py", line 90, in _process_update
+    reply = await handle_user_message(session_id, text, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\handlers\user_handler.py", line 339, in handle_user_message
+    return await _handle_user_menu(session_id, norm, raw_message, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\handlers\user_handler.py", line 902, in _handle_user_menu
+    if replies: return "\n\n".join(replies)
+NameError: name 'rasa_service' is not defined
+
+
+=== ERROR ===
+Traceback (most recent call last):
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\routes\webhook.py", line 90, in _process_update
+    reply = await handle_user_message(session_id, text, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\handlers\user_handler.py", line 339, in handle_user_message
+    return await _handle_user_menu(session_id, norm, raw_message, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\handlers\user_handler.py", line 902, in _handle_user_menu
+    replies = await agent_service.handle_message(raw_message, session_id, session)
+NameError: name 'rasa_service' is not defined
+
+
+=== ERROR ===
+Traceback (most recent call last):
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\routes\webhook.py", line 90, in _process_update
+    reply = await handle_user_message(session_id, text, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\handlers\user_handler.py", line 339, in handle_user_message
+    return await _handle_user_menu(session_id, norm, raw_message, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\handlers\user_handler.py", line 902, in _handle_user_menu
+    replies = await agent_service.handle_message(raw_message, session_id, session)
+NameError: name 'rasa_service' is not defined
+
+
+=== ERROR ===
+Traceback (most recent call last):
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\routes\webhook.py", line 90, in _process_update
+    reply = await handle_user_message(session_id, text, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\handlers\user_handler.py", line 339, in handle_user_message
+    return await _handle_user_menu(session_id, norm, raw_message, session)
+  File "C:\Users\prash\.gemini\antigravity\scratch\hospital-chatbot-python (2)\hospital-chatbot-python\src\handlers\user_handler.py", line 902, in _handle_user_menu
+    replies = await agent_service.handle_message(raw_message, session_id, session)
+NameError: name 'rasa_service' is not defined
+
