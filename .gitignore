@@ -1,0 +1,31 @@
+# Environment variables
+.env
+
+# Virtual environments
+rasa_env/
+py-Bot/
+venv/
+env/
+.venv/
+
+# Logs
+*.log
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Rasa model outputs
+models/
+.rasa/
